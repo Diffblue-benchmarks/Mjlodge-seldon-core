@@ -1,14 +1,18 @@
 package io.seldon.engine.predictors;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import io.kubernetes.client.proto.V1.Container;
+import io.seldon.engine.predictors.PredictiveUnitParameterInterface;
+import io.seldon.engine.predictors.PredictiveUnitState;
+import io.seldon.protos.DeploymentProtos.Endpoint;
+import io.seldon.protos.DeploymentProtos.Parameter;
+import io.seldon.protos.DeploymentProtos.PredictiveUnit;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.kubernetes.client.proto.V1.Container;
-import io.seldon.protos.DeploymentProtos.Endpoint;
-import io.seldon.protos.DeploymentProtos.PredictiveUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PredictiveUnitStateTest {
 	
@@ -36,4 +40,47 @@ public class PredictiveUnitStateTest {
 		Assert.assertEquals("0.1", pus.imageVersion);
 	}
 
+  @Test
+  public void addChildInputNullOutputVoid() {
+
+    // Arrange
+    final PredictiveUnitState objectUnderTest = new PredictiveUnitState();
+    final PredictiveUnitState predictiveUnitState = null;
+
+    // Act
+    objectUnderTest.addChild(predictiveUnitState);
+
+    // Assert side effects
+    final ArrayList<PredictiveUnitState> arrayList = new ArrayList<PredictiveUnitState>();
+    arrayList.add(null);
+    Assert.assertEquals(arrayList, objectUnderTest.children);
+  }
+
+  @Test
+  public void constructorOutputVoid() {
+
+    // Act, creating object to test constructor
+    final PredictiveUnitState objectUnderTest = new PredictiveUnitState();
+
+    // Assert side effects
+    final ArrayList<PredictiveUnitState> arrayList = new ArrayList<PredictiveUnitState>();
+    Assert.assertEquals(arrayList, objectUnderTest.children);
+  }
+
+
+  @Test
+  public void deserializeParametersInput0Output0() {
+
+    // Arrange
+    final ArrayList<Parameter> Parameters = new ArrayList<Parameter>();
+
+    // Act
+    final Map<String, PredictiveUnitParameterInterface> actual =
+        PredictiveUnitState.deserializeParameters(Parameters);
+
+    // Assert result
+    final HashMap<String, PredictiveUnitParameterInterface> hashMap =
+        new HashMap<String, PredictiveUnitParameterInterface>();
+    Assert.assertEquals(hashMap, actual);
+  }
 }
